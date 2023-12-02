@@ -39,7 +39,8 @@ def new_delivery_challan(source_name, target_doc=None, ignore_permissions=False)
 				"field_map": {
 					"party_account_currency": "party_account_currency",
 					"payment_terms_template": "payment_terms_template",
-					"due_date":"due_date"
+					"due_date":"due_date",
+					"name": "source_name"
 				},
 				"field_no_map": ["payment_terms_template"],
 			},
