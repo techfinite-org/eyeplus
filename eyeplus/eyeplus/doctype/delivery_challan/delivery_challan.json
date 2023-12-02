@@ -214,7 +214,8 @@
   "remarks",
   "repost_required",
   "connections_tab",
-  "amended_from"
+  "amended_from",
+  "source_name"
  ],
  "fields": [
   {
@@ -2155,6 +2156,11 @@
    "fieldtype": "Table",
    "label": "Sales Invoice Payment",
    "options": "Sales Invoice Payment"
+  },
+  {
+   "fieldname": "source_name",
+   "fieldtype": "Data",
+   "label": "Source Name"
   }
  ],
  "icon": "fa fa-file-text",
@@ -2166,7 +2172,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2023-11-25 02:11:04.450521",
+ "modified": "2023-12-02 13:53:03.478049",
  "modified_by": "Administrator",
  "module": "Eyeplus",
  "name": "Delivery Challan",
