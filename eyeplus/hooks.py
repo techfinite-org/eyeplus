@@ -11,7 +11,7 @@ app_license = "MIT"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/eyeplus/css/eyeplus.css"
+app_include_css = "/assets/css/eyeplus.css"
 # app_include_js = "/assets/eyeplus/js/eyeplus.js"
 
 # include js, css files in header of web template
