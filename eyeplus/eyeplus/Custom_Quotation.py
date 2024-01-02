@@ -168,9 +168,9 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 		set_missing_values,
 		ignore_permissions=ignore_permissions,
 	)
-	orders_list = frappe.get_all('Sales Invoice Payment',filters={'parent':source_name},fields="*")
-	for every_order in orders_list:
-		temp = {'mode_of_payment':every_order['mode_of_payment'],'amount':every_order['amount']}
-		doclist.append('sales_invoice_payment',temp)
+	# orders_list = frappe.get_all('Sales Invoice Payment',filters={'parent':source_name},fields="*")
+	# for every_order in orders_list:
+	# 	temp = {'mode_of_payment':every_order['mode_of_payment'],'amount':every_order['amount']}
+	# 	doclist.append('sales_invoice_payment',temp)
 		
 	return doclist
