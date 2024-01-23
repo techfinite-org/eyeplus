@@ -18,5 +18,5 @@ class LabelGenerator(Document):
 
 @frappe.whitelist()
 def fetch_serial_no(receipt_id, item_code):
-	doc_list = frappe.get_list('Purchase Receipt Item', filters={'parent': receipt_id,'item_code': item_code}, fields = ['serial_no'])
+	doc_list = frappe.get_all('Purchase Receipt Item', filters={'parent': receipt_id,'item_code': item_code}, fields = ['serial_no'], ignore_permissions=True)
 	return doc_list[0]['serial_no']
