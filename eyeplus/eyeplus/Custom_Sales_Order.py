@@ -97,9 +97,9 @@ def custom_make_sales_invoice(source_name, target_doc=None, ignore_permissions=F
 
 
 	# Custom sales invoice payment add
-	orders_list = frappe.get_all('Sales Invoice Payment',filters={'parent':source_name},fields="*")
-	for every_order in orders_list:
-		temp = {'mode_of_payment':every_order['mode_of_payment'],'amount':every_order['amount']}
-		doclist.append('sales_invoice_payment',temp)
+	# orders_list = frappe.get_all('Sales Invoice Payment',filters={'parent':source_name},fields="*")
+	# for every_order in orders_list:
+	# 	temp = {'mode_of_payment':every_order['mode_of_payment'],'amount':every_order['amount']}
+	# 	doclist.append('sales_invoice_payment',temp)
 
 	return doclist
