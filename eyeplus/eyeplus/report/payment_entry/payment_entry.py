@@ -1,6 +1,7 @@
 # Copyright (c) 2024, Eyeplus and contributors
 # For license information, please see license.txt
 
+
 import frappe
 
 def payment_mode(branch,query_args = None):
@@ -35,7 +36,7 @@ def execute(filters=None):
 			"width": 150
 		}
 	]
-	
+
 
 	data = []
 	query_branch = frappe.db.sql("SELECT name FROM `tabBranch`", as_list=True)

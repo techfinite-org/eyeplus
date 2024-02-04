@@ -2,9 +2,7 @@
 // For license information, please see license.txt
 
 
-
-frappe.query_reports["Payment Entry"] = {
-	
+frappe.query_reports["Sales Person Reports"] = {
 	"filters": [
 		{
 			"fieldname":"from_date",
@@ -24,6 +22,13 @@ frappe.query_reports["Payment Entry"] = {
 			"default": frappe.datetime.get_today()
 		},
         {
+            "fieldname": "branch",
+            "label": __("Branch"),
+            "fieldtype": "Link",
+            "width": "80",
+            "options": "Branch" 
+        },
+        {
             "fieldname": "company",
             "label": __("Company"),
             "fieldtype": "Link",
@@ -31,6 +36,5 @@ frappe.query_reports["Payment Entry"] = {
             "options": "Company" 
         },
 
-	],
-	"tree": true
+	]
 };
