@@ -35,6 +35,7 @@ def execute(filters=None):
 			"width": 150
 		}
 	]
+	
 
 	data = []
 	query_branch = frappe.db.sql("SELECT name FROM `tabBranch`", as_list=True)
