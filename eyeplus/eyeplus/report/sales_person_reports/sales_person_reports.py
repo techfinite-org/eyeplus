@@ -31,7 +31,7 @@ def total_amount(sales_person,query_args_so=None):
 				query = frappe.db.sql(f""" SELECT sum(total) FROM `tabSales Team` st , `tabSales Order` so WHERE parenttype = 'Sales Order' AND st.parent=so.name AND st.sales_person = '{sales_person}' AND so.status != 'Cancelled' {query_args_so} ; """, as_list=True)
 		else:
 				query = frappe.db.sql(f""" SELECT  sum(total) FROM `tabSales Team` st , `tabSales Order` so WHERE parenttype = 'Sales Order' AND st.parent=so.name AND st.sales_person = '{sales_person}' AND so.status != 'Cancelled'; """, as_list=True)
-		print(query)
+		# print(query)
 		amount = [i[0] for i in query]
 		if amount:
 				return amount[0]
@@ -130,6 +130,7 @@ def execute(filters=None):
 	sales_person_list = [sp[0] for sp in sales_person_query if sp[0] != "Sales Team"]
 	if sales_person_query:
 			for sales_person in sales_person_list:
+					# print(sales_person)
 					report_data = []
 					report_data.append(sales_person)
 					report_data.append(sum_sales_order(sales_person,query_args_so))
