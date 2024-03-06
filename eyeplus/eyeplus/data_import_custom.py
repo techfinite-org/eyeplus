@@ -29,21 +29,21 @@ def process_chunk(chunk,company,income_account,cost_center,name):
                         doc.submit()
                         frappe.db.commit()
                 doc = frappe.new_doc("Sales Invoice")
-                doc.flags.ignore_mandatory = True
+                doc.set_posting_time = 1
+                doc.posting_date = date
                 doc.customer = customer_item
-                doc.due_date = frappe.utils.nowdate()
+                doc.due_date = date
                 doc.company = company
                 doc.total_qty = qty_modified
                 doc.total  = total_amount
                 doc.total_taxes_and_charges = tax_rate
                 doc.place_of_supply = "33-Tamil Nadu"
-                doc.custom_ref_date = date
+                # doc.custom_ref_date = date
                 flag = False
                 i=i+1
                 j=0
                 print("- - - - - created -  - - - - -  - - ",i)
             else:
-                    doc.flags.ignore_mandatory = True
                     doc.append("items",{
                             "item_name":customer_item,
                             "qty":qty_modified,
@@ -52,10 +52,11 @@ def process_chunk(chunk,company,income_account,cost_center,name):
                             "cost_center":cost_center
                         })
                     flag = True
-                    # j=j+1
-                    # print("- - - item created  - - ",j)
+                    j=j+1
+                    # print("- - - error  - - ",j)
             frappe.publish_realtime("progress", dict(progress=[i, len_data], title='Creating Sales Invoice'), user=frappe.session.user)		
         except Exception as e:
+            # print(e)
             error_log.append(f"{i} has {e}")
 
     try:
@@ -63,26 +64,40 @@ def process_chunk(chunk,company,income_account,cost_center,name):
             doc.flags.ignore_mandatory = True
             doc.save()
             doc.submit()
-            print("- -  - -- - - ", doc.name, "- - - - - -", doc.customer)
+            # print("- -  - -- - - ", doc.name, "- - - - - -", doc.customer)
     except Exception as e:
         error_log.append({e})
 
-    file.custom_error_log = "\n".join(error_log)
+    error_log_str = [str(item) for item in error_log]
+    file.custom_error_log = "\n".join(error_log_str)
     file.save()
 
 @frappe.whitelist()
 def sales_invoice_import(url, company,name):
-    domain = os.getcwd() + frappe.get_site_path()[1:]
+    flag = True
+    file_hascontent_list = frappe.db.get_list("File", {}, ["*"])
+    latest_content = frappe.db.sql(f"""SELECT  content_hash FROM `tabFile` WHERE name = '{name}';""", as_dict=True)
+    print(latest_content,"- - -- - - - - -- -  - - - - - - - -")
+    if latest_content:
+        file_hascontent = [hash.content_hash for hash in file_hascontent_list]
+        if file_hascontent:
+            if file_hascontent.count(latest_content[0].content_hash) > 1:
+                # frappe.db.sql(f"DELETE FROM `tabFile` WHERE name = '{name}'; ")
+                # frappe.db.commit()
+                flag = False
+    if flag == False:
+         frappe.throw("Duplicate files are not allowed. Please verify.")
+    else:
+        domain = os.getcwd() + frappe.get_site_path()[1:]
+        if url.split(".")[-1].upper() == "CSV":
+            data = pd.read_csv(domain + url, encoding='utf-8')
+        elif url.split(".")[-1].upper() == "XLSX" or url.split(".")[-1].upper() == "XLS":
+            data = pd.read_excel(domain + url)
 
-    if url.split(".")[-1].upper() == "CSV":
-        data = pd.read_csv(domain + url, encoding='utf-8')
-    elif url.split(".")[-1].upper() == "XLSX" or url.split(".")[-1].upper() == "XLS":
-        data = pd.read_excel(domain + url)
-
-    income_account = frappe.db.get_value("Company", {"name": company}, "default_income_account")
-    cost_center = frappe.db.get_value("Company", {"name": company}, "cost_center")
-    chunk = data
-    frappe.enqueue(process_chunk, queue='long', timeout=8000,job_name=f"sales import {name} {url}",chunk=chunk,company=company,income_account=income_account,cost_center=cost_center,name=name)
+        income_account = frappe.db.get_value("Company", {"name": company}, "default_income_account")
+        cost_center = frappe.db.get_value("Company", {"name": company}, "cost_center")
+        chunk = data
+        frappe.enqueue(process_chunk, queue='long', timeout=8000,job_name=f"sales import {name} {url}",chunk=chunk,company=company,income_account=income_account,cost_center=cost_center,name=name)
 
     
 
